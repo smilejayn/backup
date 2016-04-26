@@ -22,7 +22,6 @@ Sub STEP2_JaMak()
     Application.ScreenUpdating = True
 
     '셀서식변경
-
     Columns("E:F").Select
     Selection.NumberFormatLocal = "G/표준"
 
@@ -57,12 +56,9 @@ Sub STEP2_JaMak()
     Columns("D:D").Select
     Application.CutCopyMode = False
 
-
-
     'E열 제거
     Columns("E:E").Select
     Selection.Delete Shift:=xlToLeft
-
 
     '텍스트 나누기
     Columns("D:D").Select
@@ -111,7 +107,6 @@ Sub STEP2_JaMak()
     Columns("D:D").Select
     Selection.Delete Shift:=xlToLeft
 
-
     '1행 제목 수정
     Range("A1").Select
     ActiveCell.FormulaR1C1 = " Type"
@@ -137,7 +132,6 @@ Sub STEP2_JaMak()
         SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
         ReplaceFormat:=False
 
-
     '헤더 삭제하고 다음 시트로 복사 붙혀넣기
     Rows("1:1").Select
     Selection.Delete Shift:=xlUp
@@ -145,7 +139,6 @@ Sub STEP2_JaMak()
     mainworkBook.Sheets("자막 STEP4").Select
     mainworkBook.Sheets("자막 STEP4").Range("B2").Select
     mainworkBook.Sheets("자막 STEP4").Paste
-
 
     '포토샵 Variables 데이터 자동 채우기
     Dim lastRow As Long
