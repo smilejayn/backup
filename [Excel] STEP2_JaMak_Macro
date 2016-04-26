@@ -161,7 +161,7 @@ Sub STEP2_JaMak()
 
     '빈 셀 재정리'
     With ActiveSheet
-       .UsedRange.value = Evaluate("IF(ROW(" & .UsedRange.Address & "),CLEAN(" & .UsedRange.Address & "))")
+       .UsedRange.value = Evaluate("IF(ROW(" & .UsedRange.Address & "), CLEAN(" & .UsedRange.Address & "))")
     End With
 
     '빈 셀 NULL로 채우기
@@ -177,6 +177,23 @@ Sub STEP2_JaMak()
     Selection.Replace What:="", Replacement:="NULL", LookAt:=xlPart, _
         SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
         ReplaceFormat:=False
+
+    '파일명 삽입'
+    Sheets("자막 STEP3").Select
+    Range("H1").Select
+    ActiveCell.FormulaR1C1 _
+    = "=LEFT(RC[-7],1)&+""학년 ""&+MID(RC[-7],3, 1)&""강 자막"""
+    Sheets("자막 STEP4").Select
+
+    '파일 저장'
+    Dim relativePath As String, sname As String
+    sname = ActiveWorkbook.Worksheets("자막 STEP3").Range("H1") & ".txt"
+    relativePath = Application.ActiveWorkbook.Path & "\" & sname
+    Application.DisplayAlerts = False
+    ActiveWorkbook.CheckCompatibility = False
+    ActiveWorkbook.SaveAs Filename:=relativePath, FileFormat:=xlText
+    Application.DisplayAlerts = True
+    Application.Quit
 
 
 
