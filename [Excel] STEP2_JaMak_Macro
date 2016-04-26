@@ -68,6 +68,10 @@ Sub STEP2_JaMak()
         :="▶", FieldInfo:=Array(Array(1, 1), Array(2, 1), Array(3, 1)), _
         TrailingMinusNumbers:=True
 
+    '셀서식변경
+    Columns("G:K").Select
+    Selection.NumberFormatLocal = "G/표준"
+
     '공백 삭제1
     Range("G2").Select
     ActiveCell.FormulaR1C1 = "=SUBSTITUTE(RC[-2], "" "", """", 1)"
@@ -132,9 +136,11 @@ Sub STEP2_JaMak()
         SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
         ReplaceFormat:=False
 
-    '헤더 삭제하고 다음 시트로 복사 붙혀넣기
+    '헤더 삭제, G-K열 삭제하고 다음 시트로 복사 붙혀넣기
     Rows("1:1").Select
     Selection.Delete Shift:=xlUp
+    Columns("G:K").Select
+    Selection.Delete Shift:=xlToLeft
     mainworkBook.Sheets("자막 STEP3").UsedRange.Copy
     mainworkBook.Sheets("자막 STEP4").Select
     mainworkBook.Sheets("자막 STEP4").Range("B2").Select
@@ -178,11 +184,20 @@ Sub STEP2_JaMak()
         SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
         ReplaceFormat:=False
 
-    '파일명 삽입'
+    '필요 없는 열 삭제
+    Columns("K:P").Select
+    Selection.Delete Shift:=xlToLeft
+
+    '셀서식변경
+    Sheets("자막 STEP3").Select
+    Columns("H:H").Select
+    Selection.NumberFormatLocal = "G/표준"
+
+    '파일명 지정
     Sheets("자막 STEP3").Select
     Range("H1").Select
     ActiveCell.FormulaR1C1 _
-    = "=LEFT(RC[-7],1)&+""학년 ""&+MID(RC[-7],3, 1)&""강 자막"""
+    = "=LEFT(A1,1)&+""학년 ""&+MID(A1,3, 1)&""강 자막"""
     Sheets("자막 STEP4").Select
 
     '파일 저장'
@@ -193,8 +208,7 @@ Sub STEP2_JaMak()
     ActiveWorkbook.CheckCompatibility = False
     ActiveWorkbook.SaveAs Filename:=relativePath, FileFormat:=xlText
     Application.DisplayAlerts = True
-    Application.Quit
-
+    ActiveWorkbook.Close savechanges:=False
 
 
 End Sub
