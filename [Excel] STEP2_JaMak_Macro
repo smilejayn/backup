@@ -15,12 +15,11 @@ Sub STEP2_JaMak()
     '자막제외 내용 삭제
     Application.ScreenUpdating = False
     With Range("D1", Range("D" & Rows.Count).End(xlUp))
-        .AutoFilter Field:=1, Criteria1:="<>*[*"
+        .AutoFilter Field:=1, Criteria1:="<>*자막]*", Criteria2:="<>*ip]*"
         .Offset(1).EntireRow.Delete
         .AutoFilter
     End With
     Application.ScreenUpdating = True
-
 
     '셀서식변경
 
