@@ -1,0 +1,203 @@
+Sub tss()
+'
+' tss Macro
+'
+
+    'STEP1 데이터 복사, STEP3로 붙혀넣기
+    Dim mainworkBook As Workbook
+    Set mainworkBook = ActiveWorkbook
+    mainworkBook.Sheets("STEP1").UsedRange.Copy
+    mainworkBook.Sheets("자막 STEP3").Select
+    mainworkBook.Sheets("자막 STEP3").Range("A1").Select
+    mainworkBook.Sheets("자막 STEP3").Paste
+
+
+'
+' JaMak Macro
+'
+
+'
+
+    '셀서식변경
+
+    Columns("A:B").Select
+    Selection.NumberFormatLocal = "@"
+
+    '자막제외 내용 삭제
+
+    Application.ScreenUpdating = False
+    With Range("D1", Range("D" & Rows.Count).End(xlUp))
+        .AutoFilter Field:=1, Criteria1:="<>*[*"
+        .Offset(1).EntireRow.Delete
+        .AutoFilter
+    End With
+    Application.ScreenUpdating = True
+
+
+    '셀서식변경
+
+    Columns("E:F").Select
+    Selection.NumberFormatLocal = "G/표준"
+
+    '행 높이 수정
+    Rows("1:100").Select
+    Selection.RowHeight = 17
+
+    '텍스트 나누기 전 구분기호 삽입1
+    Range("E2").Select
+    ActiveCell.FormulaR1C1 = "=SUBSTITUTE(RC[-1], ""]"", ""]▶"", 1)"
+    Range("E2").Select
+    Selection.AutoFill Destination:=Range("E2:E80"), Type:=xlFillDefault
+    Range("E2:E80").Select
+    ActiveWindow.SmallScroll Down:=-60
+    Selection.Copy
+    Range("D2").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Range("E2").Select
+    Application.CutCopyMode = False
+
+    '텍스트 나누기 전 구분기호 삽입2
+    ActiveCell.FormulaR1C1 = "=SUBSTITUTE(RC[-1], "":"", ""▶"", 1)"
+    Range("E2").Select
+    Selection.AutoFill Destination:=Range("E2:E81"), Type:=xlFillDefault
+    Range("E2:E81").Select
+    ActiveWindow.SmallScroll Down:=-60
+    Selection.Copy
+    Range("D2").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Columns("D:D").Select
+    Application.CutCopyMode = False
+
+
+
+    'E열 제거
+    Columns("E:E").Select
+    Selection.Delete Shift:=xlToLeft
+
+
+    '텍스트 나누기
+    Columns("D:D").Select
+    Selection.TextToColumns Destination:=Range("D1"), DataType:=xlDelimited, _
+        TextQualifier:=xlDoubleQuote, ConsecutiveDelimiter:=False, Tab:=False, _
+        Semicolon:=False, Comma:=False, Space:=False, Other:=True, OtherChar _
+        :="▶", FieldInfo:=Array(Array(1, 1), Array(2, 1), Array(3, 1)), _
+        TrailingMinusNumbers:=True
+
+    '공백 삭제1
+    Range("G2").Select
+    ActiveCell.FormulaR1C1 = "=SUBSTITUTE(RC[-2], "" "", """", 1)"
+    Range("G2").Select
+    Selection.AutoFill Destination:=Range("G2:G80"), Type:=xlFillDefault
+    Range("G2:G80").Select
+    Selection.AutoFill Destination:=Range("G2:H80"), Type:=xlFillDefault
+    Range("G2:H80").Select
+    ActiveWindow.SmallScroll Down:=-60
+    Selection.Copy
+    Range("E2").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Columns("G:H").Select
+    Application.CutCopyMode = False
+    Selection.ClearContents
+    Range("E3").Select
+
+    '타임코드 ":" 삭제2
+    Range("G2").Select
+    ActiveCell.FormulaR1C1 = "=SUBSTITUTE(RC[-4], "":"", """", 1)"
+    Range("G2").Select
+    Selection.AutoFill Destination:=Range("G2:G80"), Type:=xlFillDefault
+    Range("G2:G80").Select
+    ActiveWindow.SmallScroll Down:=-39
+    Selection.Copy
+    Range("C2").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+
+    '행 이동
+    Columns("A:A").Select
+    Application.CutCopyMode = False
+    Columns("A:A").Cut Destination:=Columns("G:G")
+    Columns("D:D").Select
+    Selection.Cut Destination:=Columns("A:A")
+    Columns("D:D").Select
+    Selection.Delete Shift:=xlToLeft
+
+
+    '1행 제목 수정
+    Range("A1").Select
+    ActiveCell.FormulaR1C1 = " Type"
+    Range("D1").Select
+    ActiveCell.FormulaR1C1 = " Title"
+    Range("E1").Select
+    ActiveCell.FormulaR1C1 = " Description"
+    Columns("G:G").Select
+    Selection.Delete Shift:=xlToLeft
+
+    'Type 행이동
+    Columns("A:A").Select
+    Selection.Cut Destination:=Columns("G:G")
+    Columns("A:A").Select
+    Selection.Delete Shift:=xlToLeft
+    Range("A1").Select
+
+    '텍스트 바꾸기
+    Cells.Replace What:="[tip]", Replacement:="[ TIP ]", LookAt:=xlPart, _
+        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+        ReplaceFormat:=False
+    Cells.Replace What:="[중요자막]", Replacement:="[중요]", LookAt:=xlPart, _
+        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+        ReplaceFormat:=False
+
+
+    '헤더 삭제하고 다음 시트로 복사 붙혀넣기
+    Rows("1:1").Select
+    Selection.Delete Shift:=xlUp
+    mainworkBook.Sheets("자막 STEP3").UsedRange.Copy
+    mainworkBook.Sheets("자막 STEP4").Select
+    mainworkBook.Sheets("자막 STEP4").Range("B2").Select
+    mainworkBook.Sheets("자막 STEP4").Paste
+
+
+    '포토샵 Variables 데이터 자동 채우기
+    Dim lastRow As Long
+    lastRow = Range("B" & Rows.Count).End(xlUp).Row
+    Range("A2").AutoFill Destination:=Range("A2:A" & lastRow)
+
+    lastRow = Range("B" & Rows.Count).End(xlUp).Row
+    Range("H2").AutoFill Destination:=Range("H2:H" & lastRow)
+
+    lastRow = Range("B" & Rows.Count).End(xlUp).Row
+    Range("I2").AutoFill Destination:=Range("I2:I" & lastRow)
+
+    lastRow = Range("B" & Rows.Count).End(xlUp).Row
+    Range("J2").AutoFill Destination:=Range("J2:J" & lastRow)
+
+
+    'B열에 빈 셀-> 행 제거
+    On Error Resume Next
+    Columns("B").SpecialCells(xlCellTypeBlanks).EntireRow.Delete
+
+    '빈 셀 정리'
+    With ActiveSheet
+       .UsedRange.value = Evaluate("IF(ROW(" & .UsedRange.Address & "),CLEAN(" & .UsedRange.Address & "))")
+    End With
+
+    '빈 셀 NULL로 채우기
+    Columns("A:J").Select
+    Selection.NumberFormatLocal = "G/표준"
+    Selection.NumberFormatLocal = "G/표준"
+    Selection.NumberFormatLocal = "G/표준"
+    Selection.NumberFormatLocal = "G/표준"
+    Selection.NumberFormatLocal = "G/표준"
+    Selection.NumberFormatLocal = "G/표준"
+    Selection.NumberFormatLocal = "G/표준"
+    Selection.NumberFormatLocal = "G/표준"
+    Selection.Replace What:="", Replacement:="NULL", LookAt:=xlPart, _
+        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+        ReplaceFormat:=False
+
+
+
+End Sub
