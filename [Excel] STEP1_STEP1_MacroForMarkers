@@ -3,6 +3,13 @@ Sub STEP1_MacroForMarkers()
 ' Macro5 Macro
 '
 
+    '붙혀넣기
+    Dim mainworkBook As Workbook
+    Set mainworkBook = ActiveWorkbook
+    mainworkBook.Sheets("STEP1").Select
+    mainworkBook.Sheets("STEP1").Range("C2").Select
+    mainworkBook.Sheets("STEP1").Paste
+
     '열 서식 변경
     '
     Columns("D:D").Select
