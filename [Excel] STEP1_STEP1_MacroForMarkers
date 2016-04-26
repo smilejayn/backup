@@ -1,0 +1,119 @@
+Sub STEP1_MacroForMarkers()
+'
+' Macro5 Macro
+'
+
+    '열 서식 변경
+    '
+    Columns("D:D").Select
+    Selection.NumberFormatLocal = "G/표준"
+    '텍스트 컬러 추출
+    '
+    Range("D2").Select
+    Range("D2").Formula = "=GetColorText(RC[-1])"
+    Range("D2").Copy
+    Range("D2:D200").PasteSpecial (xlPasteAll)
+
+    '강조 텍스트 값 붙혀넣기
+    '
+    Range("D2:D200").Select
+    Application.CutCopyMode = False
+    Selection.Copy
+    ActiveWindow.SmallScroll Down:=-12
+    Range("A2").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Columns("D:D").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlToLeft
+
+    '공백 삭제
+    '
+    Columns("D:D").Select
+    Selection.Delete Shift:=xlToLeft
+    Columns("D:D").EntireColumn.AutoFit
+
+    Columns("B:B").Select
+    Selection.NumberFormatLocal = "G/표준"
+
+    'C열에서 MP4찾고 있으면 B열에 값 표시'
+    Range("B2").Select
+    ActiveCell.FormulaR1C1 = "=IF(ISNUMBER(SEARCH(""MP4"",RC[1])), RC[1], """")"
+    '아래로 FillDown'
+    Range("B2").Select
+    Selection.AutoFill Destination:=Range("B2:B167"), Type:=xlFillDefault
+    Range("B2:B167").Select
+
+    '복사 -> 값 붙혀넣기'
+    Columns("B:B").Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Application.CutCopyMode = False
+
+    '빈 셀 정리'
+    With ActiveSheet
+       .UsedRange.value = Evaluate("IF(ROW(" & .UsedRange.Address & "),CLEAN(" & .UsedRange.Address & "))")
+    End With
+
+    '빈 셀 채우기
+    Dim LR As Long
+    LR = Cells.Find(What:="*", SearchDirection:=xlPrevious, SearchOrder:=xlByRows).Row
+
+        With Range("B2:B" & LR)
+           .SpecialCells(xlCellTypeBlanks).FormulaR1C1 = "=R[-1]C"
+            .value = .value
+        End With
+
+
+        '.mp4 제거'
+
+    Columns("D:D").Select
+    Selection.NumberFormatLocal = "G/표준"
+        Range("D2").Select
+        ActiveCell.FormulaR1C1 = "=SUBSTITUTE(RC[-2], "".mp4"", """", 1)"
+        Range("D2").Select
+        Selection.AutoFill Destination:=Range("D2:D163"), Type:=xlFillDefault
+        Range("D2:D150").Select
+        Selection.Copy
+        Range("B2").Select
+        Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+            :=False, Transpose:=False
+        Application.CutCopyMode = False
+        Columns("D:D").Select
+        Selection.ClearContents
+
+
+    'C열에 mp4포함 된 행 제거
+    With ActiveSheet
+        .AutoFilterMode = False
+        With Range("d1", Range("C" & Rows.Count).End(xlUp))
+            .AutoFilter 1, "*mp4*"
+            On Error Resume Next
+            .Offset(1).SpecialCells(12).EntireRow.Delete
+        End With
+        .AutoFilterMode = False
+    End With
+
+
+    '텍스트 나누기
+    '
+    Columns("C:C").Select
+    Selection.TextToColumns Destination:=Range("C1"), DataType:=xlFixedWidth, _
+        FieldInfo:=Array(Array(0, 2), Array(5, 1), Array(6, 1)), TrailingMinusNumbers:= _
+        True
+    Columns("C:C").EntireColumn.AutoFit
+
+    '공백 삭제
+    '
+    Columns("D:D").Select
+    Selection.Delete Shift:=xlToLeft
+    Columns("D:D").EntireColumn.AutoFit
+
+    'C열에 빈 셀-> 행 제거
+    On Error Resume Next
+    Columns("C").SpecialCells(xlCellTypeBlanks).EntireRow.Delete
+
+
+
+End Sub
