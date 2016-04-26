@@ -163,6 +163,28 @@ Sub CopyContentsForExcel()
     End With
     Selection.Find.Execute Replace:=wdReplaceAll
 
+    '타임코드-자막 사이 공백 없을 시 공백 삽입
+    ActiveDocument.Tables(1).Cell(Row:=11, Column:=3).Range.Select
+    Selection.Find.ClearFormatting
+    Selection.Find.Replacement.ClearFormatting
+    With Selection.Find
+        .Text = "([0-9][0-9]:[0-9][0-9])([! ])"
+        .Replacement.Text = "\1 \2"
+        .Forward = True
+        .Wrap = wdFindStop
+        .Format = False
+        .MatchCase = False
+        .MatchWholeWord = False
+        .MatchByte = False
+        .CorrectHangulEndings = False
+        .HanjaPhoneticHangul = False
+        .MatchAllWordForms = False
+        .MatchSoundsLike = False
+        .MatchWildcards = True
+    End With
+    Selection.Find.Execute Replace:=wdReplaceAll
+
+
     ' ----로 클립 별 단 나누기 제거
     ActiveDocument.Tables(1).Cell(Row:=11, Column:=3).Range.Select
     Selection.Find.ClearFormatting
