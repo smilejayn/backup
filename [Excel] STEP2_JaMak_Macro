@@ -1,7 +1,4 @@
-Sub tss()
-'
-' tss Macro
-'
+Sub STEP2_JaMak()
 
     'STEP1 데이터 복사, STEP3로 붙혀넣기
     Dim mainworkBook As Workbook
@@ -11,20 +8,11 @@ Sub tss()
     mainworkBook.Sheets("자막 STEP3").Range("A1").Select
     mainworkBook.Sheets("자막 STEP3").Paste
 
-
-'
-' JaMak Macro
-'
-
-'
-
     '셀서식변경
-
     Columns("A:B").Select
     Selection.NumberFormatLocal = "@"
 
     '자막제외 내용 삭제
-
     Application.ScreenUpdating = False
     With Range("D1", Range("D" & Rows.Count).End(xlUp))
         .AutoFilter Field:=1, Criteria1:="<>*[*"
@@ -179,7 +167,7 @@ Sub tss()
     On Error Resume Next
     Columns("B").SpecialCells(xlCellTypeBlanks).EntireRow.Delete
 
-    '빈 셀 정리'
+    '빈 셀 재정리'
     With ActiveSheet
        .UsedRange.value = Evaluate("IF(ROW(" & .UsedRange.Address & "),CLEAN(" & .UsedRange.Address & "))")
     End With
