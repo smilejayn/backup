@@ -437,6 +437,16 @@ Sub CopyContentsForExcel()
     End With
     Selection.Find.Execute Replace:=wdReplaceAll
 
+    '표를 텍스트로 변환
+    Dim oTable As Table
+
+    For Each oTable In ActiveDocument.Tables(1).Cell(Row:=11, Column:=3).Tables
+
+        oTable.ConvertToText Separator:=wdSeparateByTabs, NestedTables:= _
+        True
+
+    Next
+
 
     '폰트 및 줄간격 변경 (가독성+)
     Selection.WholeStory
@@ -699,6 +709,28 @@ Sub CopyContentsForExcel()
     End With
     Selection.Find.Execute Replace:=wdReplaceAll
 
+
+    '표를 텍스트로 변환하면서 생성된 탭 및 기타 탭 제거
+    Selection.Find.ClearFormatting
+    Selection.Find.Replacement.ClearFormatting
+    With Selection.Find
+        .Text = "^t"
+        .Replacement.Text = "  "
+        .Forward = True
+        .Wrap = wdFindContinue
+        .Format = False
+        .MatchCase = False
+        .MatchWholeWord = False
+        .MatchByte = False
+        .CorrectHangulEndings = True
+        .HanjaPhoneticHangul = False
+        .MatchWildcards = False
+        .MatchSoundsLike = False
+        .MatchAllWordForms = False
+    End With
+    Selection.Find.Execute Replace:=wdReplaceAll
+
+
     '너무 넓은 공백 간소화
     ActiveDocument.Tables(1).Cell(Row:=11, Column:=3).Range.Select
     Selection.Find.ClearFormatting
@@ -741,10 +773,40 @@ Sub CopyContentsForExcel()
     End With
     Selection.Find.Execute Replace:=wdReplaceAll
 
+    '들여쓰기 제거
+    ActiveDocument.Tables(1).Cell(Row:=11, Column:=3).Range.Select
+    remove_indents
+    remove_all_the_first_line_indent_spaces
+
 
     ' 내용 선택&복사
     ActiveDocument.Tables(1).Cell(Row:=11, Column:=3).Range.Select
     Selection.Copy
 
 
+End Sub
+
+'들여쓰기 제거 명령 실행을 위한 모듈
+Sub remove_indents()
+    With Selection.ParagraphFormat
+    .CharacterUnitLeftIndent = 0
+    .CharacterUnitRightIndent = 0
+    .CharacterUnitFirstLineIndent = 0
+    .LeftIndent = CentimetersToPoints(0)
+    .RightIndent = CentimetersToPoints(0)
+    .FirstLineIndent = CentimetersToPoints(0)
+End With
+End Sub
+Sub remove_all_the_first_line_indent_spaces()
+    Dim i As Paragraph, n As Long
+    Application.ScreenUpdating = False 'close screen and refresh
+    For Each i In ActiveDocument.Paragraphs 'cycling in the pragraphs of the active document
+    For n = 1 To i.Range.Characters.Count
+    If i.Range.Characters(1).Text = " " Or i.Range.Characters(1).Text = "　" Or i.Range.Characters(1).Text = Chr(9) Then
+    i.Range.Characters(1).Delete
+    Else: Exit For
+    End If
+    Next n
+    Next
+    Application.ScreenUpdating = True 'restore screen and refresh
 End Sub
