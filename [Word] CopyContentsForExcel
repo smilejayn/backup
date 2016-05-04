@@ -778,6 +778,48 @@ Sub CopyContentsForExcel()
     remove_indents
     remove_all_the_first_line_indent_spaces
 
+    'mp4뒤 공백 제거
+    ActiveDocument.Tables(1).Cell(Row:=11, Column:=3).Range.Select
+    Selection.Find.ClearFormatting
+    Selection.Find.Replacement.ClearFormatting
+    With Selection.Find
+        .Text = "(^13[0-9]{1,}\-[0-9]{1,}\-[0-9]{1,}?mp4)([ ]{1,})(^13)"
+        .Replacement.Text = "\1\3"
+        .Forward = True
+        .Wrap = wdFindContinue
+        .Format = False
+        .MatchCase = False
+        .MatchWholeWord = False
+        .MatchByte = False
+        .CorrectHangulEndings = True
+        .HanjaPhoneticHangul = False
+        .MatchWildcards = True
+        .MatchSoundsLike = False
+        .MatchAllWordForms = False
+    End With
+    Selection.Find.Execute Replace:=wdReplaceAll
+
+    '클립 분리용외 mp4 삭제
+    ActiveDocument.Tables(1).Cell(Row:=11, Column:=3).Range.Select
+    Selection.Find.ClearFormatting
+    Selection.Find.Replacement.ClearFormatting
+    With Selection.Find
+        .Text = "([!^13][0-9]{1,}\-[0-9]{1,}\-[0-9]{1,})(?mp4[!^13])"
+        .Replacement.Text = "\1 "
+        .Forward = True
+        .Wrap = wdFindContinue
+        .Format = False
+        .MatchCase = False
+        .MatchWholeWord = False
+        .MatchByte = False
+        .CorrectHangulEndings = True
+        .HanjaPhoneticHangul = False
+        .MatchWildcards = True
+        .MatchSoundsLike = False
+        .MatchAllWordForms = False
+    End With
+    Selection.Find.Execute Replace:=wdReplaceAll
+
 
     ' 내용 선택&복사
     ActiveDocument.Tables(1).Cell(Row:=11, Column:=3).Range.Select
