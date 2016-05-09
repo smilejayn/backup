@@ -60,7 +60,7 @@ Sub STEP1_MacroForMarkers()
 
     '빈 셀 정리'
     With ActiveSheet
-       .UsedRange.value = Evaluate("IF(ROW(" & .UsedRange.Address & "),CLEAN(" & .UsedRange.Address & "))")
+       .UsedRange.Value = Evaluate("IF(ROW(" & .UsedRange.Address & "),CLEAN(" & .UsedRange.Address & "))")
     End With
 
     '빈 셀 채우기
@@ -69,7 +69,7 @@ Sub STEP1_MacroForMarkers()
 
         With Range("B2:B" & LR)
            .SpecialCells(xlCellTypeBlanks).FormulaR1C1 = "=R[-1]C"
-            .value = .value
+            .Value = .Value
         End With
 
 
@@ -120,6 +120,26 @@ Sub STEP1_MacroForMarkers()
     'C열에 빈 셀-> 행 제거
     On Error Resume Next
     Columns("C").SpecialCells(xlCellTypeBlanks).EntireRow.Delete
+
+    '첫번째 클립명 자동 채우기
+    Columns("E:E").Select
+    Selection.NumberFormat = "General"
+    Range("E1").Select
+    ActiveCell.FormulaR1C1 = "=LOOKUP(2,1/(C[-3]<>""""),C[-3])"
+    Columns("B:B").Select
+    Selection.Replace What:="clip number", Replacement:="=simpleCellRegex2(E1)" _
+        , LookAt:=xlPart, SearchOrder:=xlByRows, MatchCase:=False, SearchFormat _
+        :=False, ReplaceFormat:=False
+    Range("B1").Select
+    ActiveCell.FormulaR1C1 = "clip number"
+    Columns("B:B").Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Columns("E:E").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlToLeft
+
 
 
 
