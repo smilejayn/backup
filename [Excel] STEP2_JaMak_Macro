@@ -167,7 +167,7 @@ Sub STEP2_JaMak()
 
     '빈 셀 재정리'
     With ActiveSheet
-       .UsedRange.value = Evaluate("IF(ROW(" & .UsedRange.Address & "), CLEAN(" & .UsedRange.Address & "))")
+       .UsedRange.Value = Evaluate("IF(ROW(" & .UsedRange.Address & "), CLEAN(" & .UsedRange.Address & "))")
     End With
 
     '빈 셀 NULL로 채우기
