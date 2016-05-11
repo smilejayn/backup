@@ -820,6 +820,26 @@ Sub CopyContentsForExcel()
     End With
     Selection.Find.Execute Replace:=wdReplaceAll
 
+    '엑셀,텍스트파일에서 물음표로 되는 공백 특수기호(ChrW(8198) 삭제 - 수식텍스트변환할때생성됨
+    ActiveDocument.Tables(1).Cell(Row:=11, Column:=3).Range.Select
+    Selection.Find.ClearFormatting
+    Selection.Find.Replacement.ClearFormatting
+    With Selection.Find
+        .Text = ChrW(8198)
+        .Replacement.Text = ""
+        .Forward = True
+        .Wrap = wdFindContinue
+        .Format = False
+        .MatchCase = False
+        .MatchWholeWord = False
+        .MatchByte = False
+        .CorrectHangulEndings = True
+        .HanjaPhoneticHangul = False
+        .MatchWildcards = False
+        .MatchSoundsLike = False
+        .MatchAllWordForms = False
+    End With
+    Selection.Find.Execute Replace:=wdReplaceAll
 
     ' 내용 선택&복사
     ActiveDocument.Tables(1).Cell(Row:=11, Column:=3).Range.Select
