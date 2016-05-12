@@ -1,6 +1,5 @@
 Sub STEP1_MacroForMarkers()
 '
-' Macro5 Macro
 '
 
     '붙혀넣기
@@ -14,6 +13,7 @@ Sub STEP1_MacroForMarkers()
     '
     Columns("D:D").Select
     Selection.NumberFormatLocal = "G/표준"
+
     '텍스트 컬러 추출
     '
     Range("D2").Select
@@ -139,6 +139,55 @@ Sub STEP1_MacroForMarkers()
     Columns("E:E").Select
     Application.CutCopyMode = False
     Selection.Delete Shift:=xlToLeft
+
+    '포토샵 자막 <b></b>제거
+    With ActiveSheet
+        .AutoFilterMode = False
+        With Columns("D:D")
+            .AutoFilter 1, "*[중요자막]*"
+            On Error Resume Next
+
+    .Replace What:="<b>", Replacement:="", LookAt:=xlPart, _
+        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+        ReplaceFormat:=False
+    .Replace What:="</b>", Replacement:="", LookAt:=xlPart, _
+        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+        ReplaceFormat:=False
+        End With
+        .AutoFilterMode = False
+    End With
+
+    With ActiveSheet
+        .AutoFilterMode = False
+        With Columns("D:D")
+            .AutoFilter 1, "*[자막]*"
+            On Error Resume Next
+
+    .Replace What:="<b>", Replacement:="", LookAt:=xlPart, _
+        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+        ReplaceFormat:=False
+    .Replace What:="</b>", Replacement:="", LookAt:=xlPart, _
+        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+        ReplaceFormat:=False
+        End With
+        .AutoFilterMode = False
+    End With
+
+    With ActiveSheet
+        .AutoFilterMode = False
+        With Columns("D:D")
+            .AutoFilter 1, "*[tip]*"
+            On Error Resume Next
+
+    .Replace What:="<b>", Replacement:="", LookAt:=xlPart, _
+        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+        ReplaceFormat:=False
+    .Replace What:="</b>", Replacement:="", LookAt:=xlPart, _
+        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+        ReplaceFormat:=False
+        End With
+        .AutoFilterMode = False
+    End With
 
 
 
