@@ -826,6 +826,160 @@ Sub CopyContentsForExcel()
     Selection.Find.Replacement.ClearFormatting
     With Selection.Find
         .Text = ChrW(8198)
+        .Replacement.Text = " "
+        .Forward = True
+        .Wrap = wdFindContinue
+        .Format = False
+        .MatchCase = False
+        .MatchWholeWord = False
+        .MatchByte = False
+        .CorrectHangulEndings = True
+        .HanjaPhoneticHangul = False
+        .MatchWildcards = False
+        .MatchSoundsLike = False
+        .MatchAllWordForms = False
+    End With
+    Selection.Find.Execute Replace:=wdReplaceAll
+
+    '2개 이상 스페이스 공백 합치기
+    ActiveDocument.Tables(1).Cell(Row:=11, Column:=3).Range.Select
+    Selection.Find.ClearFormatting
+    Selection.Find.Replacement.ClearFormatting
+    With Selection.Find
+        .Text = "([ ]{1,})"
+        .Replacement.Text = " "
+        .Forward = True
+        .Wrap = wdFindContinue
+        .Format = False
+        .MatchCase = False
+        .MatchWholeWord = False
+        .MatchByte = False
+        .CorrectHangulEndings = True
+        .HanjaPhoneticHangul = False
+        .MatchWildcards = True
+        .MatchSoundsLike = False
+        .MatchAllWordForms = False
+    End With
+    Selection.Find.Execute Replace:=wdReplaceAll
+
+    '공백 정리
+    ActiveDocument.Tables(1).Cell(Row:=11, Column:=3).Range.Select
+    Selection.Find.ClearFormatting
+    Selection.Find.Replacement.ClearFormatting
+    With Selection.Find
+        .Text = " ^13"
+        .Replacement.Text = "^13"
+        .Forward = True
+        .Wrap = wdFindContinue
+        .Format = False
+        .MatchCase = False
+        .MatchWholeWord = False
+        .MatchByte = False
+        .CorrectHangulEndings = True
+        .HanjaPhoneticHangul = False
+        .MatchWildcards = True
+        .MatchSoundsLike = False
+        .MatchAllWordForms = False
+    End With
+    Selection.Find.Execute Replace:=wdReplaceAll
+
+    '줄바꿈 기호 /!/를 검정색으로 변경
+    ActiveDocument.Tables(1).Cell(Row:=11, Column:=3).Range.Select
+    Selection.Find.ClearFormatting
+    Selection.Find.Replacement.ClearFormatting
+    With Selection.Find.Replacement.Font
+        .Bold = False
+        .Italic = False
+        .color = wdColorAutomatic
+    End With
+    With Selection.Find
+        .Text = "/!/"
+        .Replacement.Text = "/!/"
+        .Forward = True
+        .Wrap = wdFindContinue
+        .Format = True
+        .MatchCase = False
+        .MatchWholeWord = False
+        .MatchByte = False
+        .CorrectHangulEndings = True
+        .HanjaPhoneticHangul = False
+        .MatchWildcards = False
+        .MatchSoundsLike = False
+        .MatchAllWordForms = False
+    End With
+    Selection.Find.Execute Replace:=wdReplaceAll
+
+
+    '모든 공백의 글꼴색을 검정색으로 변경
+    ActiveDocument.Tables(1).Cell(Row:=11, Column:=3).Range.Select
+    Selection.Find.ClearFormatting
+    Selection.Find.Replacement.ClearFormatting
+    With Selection.Find.Replacement.Font
+        .Bold = False
+        .Italic = False
+        .color = wdColorAutomatic
+    End With
+    With Selection.Find
+        .Text = " "
+        .Replacement.Text = " "
+        .Forward = True
+        .Wrap = wdFindContinue
+        .Format = True
+        .MatchCase = False
+        .MatchWholeWord = False
+        .MatchByte = False
+        .CorrectHangulEndings = True
+        .HanjaPhoneticHangul = False
+        .MatchWildcards = False
+        .MatchSoundsLike = False
+        .MatchAllWordForms = False
+    End With
+    Selection.Find.Execute Replace:=wdReplaceAll
+
+
+
+    '검정색 외 모든 색을 빨간색 폰트로 변경
+    ActiveDocument.Tables(1).Cell(Row:=11, Column:=3).Range.Select
+    Selection.Find.ClearFormatting
+    Selection.Find.Replacement.ClearFormatting
+    With Selection.Find
+        .Text = "<?>"
+        .MatchWildcards = True
+    While .Execute
+        If Selection.Font.color <> wdColorBlack Then
+        Selection.Font.color = wdColorRed
+    End If
+    Wend
+    End With
+
+    '빨간색 폰트 <b></b>로 감싸기
+    ActiveDocument.Tables(1).Cell(Row:=11, Column:=3).Range.Select
+    Selection.Find.ClearFormatting
+    Selection.Find.Font.color = wdColorRed
+    Selection.Find.Replacement.ClearFormatting
+    With Selection.Find
+        .Text = "(?)"
+        .Replacement.Text = "<b>\1</b>"
+        .Forward = True
+        .Wrap = wdFindStop
+        .Format = True
+        .MatchCase = False
+        .MatchWholeWord = False
+        .MatchByte = False
+        .CorrectHangulEndings = True
+        .HanjaPhoneticHangul = False
+        .MatchAllWordForms = False
+        .MatchSoundsLike = False
+        .MatchWildcards = True
+    End With
+    Selection.Find.Execute Replace:=wdReplaceAll
+
+    '중복 </b><b> 제거
+    ActiveDocument.Tables(1).Cell(Row:=11, Column:=3).Range.Select
+    Selection.Find.ClearFormatting
+    Selection.Find.Replacement.ClearFormatting
+    With Selection.Find
+        .Text = "</b><b>"
         .Replacement.Text = ""
         .Forward = True
         .Wrap = wdFindContinue
@@ -841,10 +995,83 @@ Sub CopyContentsForExcel()
     End With
     Selection.Find.Execute Replace:=wdReplaceAll
 
+    '줄바꿈 수정
+    ActiveDocument.Tables(1).Cell(Row:=11, Column:=3).Range.Select
+    Selection.Find.ClearFormatting
+    Selection.Find.Replacement.ClearFormatting
+    With Selection.Find
+        .Text = "(^13)(\<\/b\>)"
+        .Replacement.Text = "\2\1"
+        .Forward = True
+        .Wrap = wdFindContinue
+        .Format = False
+        .MatchCase = False
+        .MatchWholeWord = False
+        .MatchByte = False
+        .CorrectHangulEndings = True
+        .HanjaPhoneticHangul = False
+        .MatchAllWordForms = False
+        .MatchSoundsLike = False
+        .MatchWildcards = True
+    End With
+    Selection.Find.Execute Replace:=wdReplaceAll
+
+    '<b> 글꼴색 변경
+    ActiveDocument.Tables(1).Cell(Row:=11, Column:=3).Range.Select
+    Selection.Find.ClearFormatting
+    Selection.Find.Replacement.ClearFormatting
+    With Selection.Find.Replacement.Font
+        .Bold = False
+        .Italic = False
+        .color = wdColorAutomatic
+    End With
+    With Selection.Find
+        .Text = "<b>"
+        .Replacement.Text = "<b>"
+        .Forward = True
+        .Wrap = wdFindContinue
+        .Format = True
+        .MatchCase = False
+        .MatchWholeWord = False
+        .MatchByte = False
+        .CorrectHangulEndings = True
+        .HanjaPhoneticHangul = False
+        .MatchWildcards = False
+        .MatchSoundsLike = False
+        .MatchAllWordForms = False
+    End With
+    Selection.Find.Execute Replace:=wdReplaceAll
+
+    '</b> 글꼴색 변경
+    ActiveDocument.Tables(1).Cell(Row:=11, Column:=3).Range.Select
+    Selection.Find.ClearFormatting
+    Selection.Find.Replacement.ClearFormatting
+    With Selection.Find.Replacement.Font
+        .Bold = False
+        .Italic = False
+        .color = wdColorAutomatic
+    End With
+    With Selection.Find
+        .Text = "</b>"
+        .Replacement.Text = "</b>"
+        .Forward = True
+        .Wrap = wdFindContinue
+        .Format = True
+        .MatchCase = False
+        .MatchWholeWord = False
+        .MatchByte = False
+        .CorrectHangulEndings = True
+        .HanjaPhoneticHangul = False
+        .MatchWildcards = False
+        .MatchSoundsLike = False
+        .MatchAllWordForms = False
+    End With
+    Selection.Find.Execute Replace:=wdReplaceAll
+
+
     ' 내용 선택&복사
     ActiveDocument.Tables(1).Cell(Row:=11, Column:=3).Range.Select
     Selection.Copy
-
 
 End Sub
 
