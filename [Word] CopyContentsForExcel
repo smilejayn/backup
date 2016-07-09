@@ -1068,6 +1068,27 @@ Sub CopyContentsForExcel()
     End With
     Selection.Find.Execute Replace:=wdReplaceAll
 
+    '</b> <b> 합체
+    ActiveDocument.Tables(1).Cell(Row:=11, Column:=3).Range.Select
+    Selection.Find.ClearFormatting
+    Selection.Find.Replacement.ClearFormatting
+    With Selection.Find
+        .Text = "</b> <b>"
+        .Replacement.Text = ""
+        .Forward = True
+        .Wrap = wdFindContinue
+        .Format = False
+        .MatchCase = False
+        .MatchWholeWord = False
+        .MatchByte = False
+        .CorrectHangulEndings = True
+        .HanjaPhoneticHangul = False
+        .MatchWildcards = False
+        .MatchSoundsLike = False
+        .MatchAllWordForms = False
+    End With
+    Selection.Find.Execute Replace:=wdReplaceAll
+
 
     ' 내용 선택&복사
     ActiveDocument.Tables(1).Cell(Row:=11, Column:=3).Range.Select
