@@ -1,20 +1,20 @@
 ﻿// change ruler unit to pixel otherwise, layer width won't be resized
                         app.preferences.rulerUnits = Units.PIXELS;
-                        
-                        
+
+
  // Remove hidden layers - starts here
         //  slectect group layer first
-        var group = app.activeDocument.layers.getByName("CoreVariables"); 
-        app.activeDocument.activeLayer=app.activeDocument.layers.getByName("CoreVariables"); 
+        var group = app.activeDocument.layers.getByName("CoreVariables");
+        app.activeDocument.activeLayer=app.activeDocument.layers.getByName("CoreVariables");
 
         // delete hidden layers except selected layer (which is group layer)
         for (i=app.activeDocument.layers.length; i>0; i--){
-            if (!app.activeDocument.layers[i-1].visible) app.activeDocument.layers[i-1].remove(); 
+            if (!app.activeDocument.layers[i-1].visible) app.activeDocument.layers[i-1].remove();
             }
 
         // delete group layer.
         group.remove();
-        
+
 
 //    Line breaker with "/!/"
     breakLine ()
@@ -29,27 +29,27 @@
 
             // 제목 텍스트 레이어 변수 선언
             var titletext = app.activeDocument.artLayers.getByName ("Title");
-            
+
             //제목 바 레이어 변수 선언
-            var titlebar = app.activeDocument.artLayers.getByName ("제목 바");            
+            var titlebar = app.activeDocument.artLayers.getByName ("제목 바");
 
             var TBW = titlebar.width;
             var TBB = titlebar.bounds;
 
             // 텍스트 레이어 면적 소환
-            var TTL = titletext.bounds;  
-                        
+            var TTL = titletext.bounds;
+
             // 텍스트 레이어 높이 소환
             var ttlH = TTL[3].value - TTL[1].value;
-            
+
             // 텍스트 레이어 너비 소환
             var ttlW = TTL[2].value - TTL[0].value;
 
                     //  텍스트 레이어의 너비가 140px보다 크면 제목바 너비+60px
                     if (ttlW > 140) {
                          resizeTitleBar(ttlW+60,TBW);
-                        };    
-    
+                        };
+
     function resizeTitleBar(horizontal, vertical){
                         // 유닛 지정
                         var strtRulerUnits = app.preferences.rulerUnits;
@@ -59,7 +59,7 @@
                         app.preferences.rulerUnits = Units.PIXELS;
 
                         app.preferences.typeUnits = TypeUnits.PIXELS;
-                        
+
                         // 제목 바 변수 선언
                         var titlebar = app.activeDocument.artLayers.getByName ("제목 바");
 
@@ -93,30 +93,30 @@
 
             // 설명 텍스트 레이어 변수 선언
             var desctext = app.activeDocument.artLayers.getByName ("Description");
-            
+
             // 텍스트 레이어 면적 소환
             var DTL = desctext.bounds;
-            
+
             // 텍스트 레이어 높이 소환
            var Height2 = DTL[3].value - DTL[1].value;
-            
+
             // 텍스트 레이어 너비 소환
            var Width2 = DTL[2].value - DTL[0].value;
 
                     //  텍스트 레이어의 너비가 460px보다 작으면 제목바 너비+160px
                     if (Width2 < 460) {
                          resizeDescBar(Width2+65,100);
-                        };    
+                        };
 
             //  긴 문장일 때 설명 레이어 위치 변경
             var deltaY =  -18;
             var deltaX = null;
-            
+
                     //  텍스트 레이어의 너비가 700px보다 크면 y-18
                     if (Width2 > 700) {
                         desctext.translate (deltaX, deltaY)
-                        };    
-                        
+                        };
+
     function resizeDescBar(horizontal, vertical){
                         // 유닛 지정
                         var strtRulerUnits = app.preferences.rulerUnits;
@@ -126,7 +126,7 @@
                         app.preferences.rulerUnits = Units.PIXELS;
 
                         app.preferences.typeUnits = TypeUnits.PIXELS;
-                        
+
                         // 자막 바 변수 선언
                         var descbar = app.activeDocument.artLayers.getByName ("자막 바");
 
@@ -153,4 +153,3 @@
                                     app.preferences.typeUnits = strtTypeUnits;
 
     }
-
