@@ -1,4 +1,4 @@
-﻿var result = confirm("스크립트를 실행하시겠습니까?");
+var result = confirm("스크립트를 실행하시겠습니까?");
 if (result) {
 
 //프로그레스바 생성
@@ -32,6 +32,7 @@ function renameLayers(layers, idx) {
     var currentLayer = 1;
     for (var i = layers.length - 1; i >= 0; i--) {
         var layer = layers[i];
+        var wasVisible = layer.visible; // save the visibility state of the layer
         if (layer.typename === "LayerSet") {
             // 레이어 그룹일 경우 그룹 안 레이어 다시 처리
             var numLayersInGroup = layer.layers.length;
@@ -42,7 +43,7 @@ function renameLayers(layers, idx) {
             // 레이어 이름을 변경
             layer.name = pad(idx++, 3) + "｜" + layer.name;
         }
-
+        layer.visible = wasVisible; // restore the visibility state of the layer
         // 이름 변경중일 때 프로그레스바의 상태 갱신
         currentLayer++;
         var progressPercent = Math.round((idx / totalLayers) * 100);
